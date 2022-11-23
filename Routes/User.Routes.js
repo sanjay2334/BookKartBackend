@@ -6,7 +6,8 @@ const {
     logout,
     getProfile,
     takeBooks,
-    returnBooks
+    returnBooks,
+    resendOtp
 } = require('../Controller/Users.Controller');
 
 router.post('/signup',createUser);
@@ -16,5 +17,6 @@ router.get('/logout',logout);
 router.get('/profile/:id',getProfile);
 router.post('/takeBooks',takeBooks);
 router.post('/returnBooks',returnBooks);
+router.post('/resendOtp',resendOtp);
 
 module.exports = router;

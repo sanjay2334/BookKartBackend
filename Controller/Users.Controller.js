@@ -35,6 +35,8 @@ async function createUser(req,res){
     try{
         const {name,phone,email,password} = req.body;
         const pass = hashPassword(password);
+        const usr1 = await Users.findOne({email});
+        if(!usr1){
         const user = new Users({
             name:name,
             phone:phone,
@@ -77,6 +79,52 @@ async function createUser(req,res){
             }
         });
         res.status(200).json({message:"User Created",user:usr});
+    }else{
+        res.status(400).json({message:"User Already Exists"});
+        }
+    }catch(err){
+        console.log(err);
+    }
+}
+
+async function resendOtp(req,res){
+    try{
+        const {email} = req.body;
+        const OTP = otpgenerator.generate(4,{upperCaseAlphabets:false,lowerCaseAlphabets:false,specialChars:false});
+        const user = await Users.findOne({email});
+        const usrr = await Users.findByIdAndUpdate(user._id,{Otp:OTP});
+        let details = {
+            from: "testvalidatorautomation@outlook.com",
+            to: `${email}`,
+            subject: "Your Otp",
+            html: `
+            <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+            <div style="margin:50px auto;width:70%;padding:20px 0">
+              <div style="border-bottom:1px solid #eee">
+                <p style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">Book Kart</p>
+              </div>
+              <p style="font-size:1.1em">Hi,${user.name}</p>
+              <p> Use the following OTP to complete your Sign Up procedures. OTP is valid for 1 Hour</p>
+              <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">${OTP}</h2>
+              <p style="font-size:0.9em;">Regards,<br />Book Kart</p>
+              <hr style="border:none;border-top:1px solid #eee" />
+              <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
+                <p>Book Kart</p>
+                <p>Tamil Nadu</p>
+                <p>India</p>
+              </div>
+            </div>
+          </div>
+            `
+        }
+        mailtransporter.sendMail(details,function(err,data){
+            if(err){
+                console.log(err);
+            }else{
+                console.log("Email sent");
+            }
+        });
+        res.status(200).json({message:"Otp Sent"});
     }catch(err){
         console.log(err);
     }
@@ -188,7 +236,8 @@ async function takeBooks(req,res){
         const book = await Books.findById(bookId);
         const user = await Users.findById(userId);
 
-        if(!book.isTaken){
+        if(user.isAuth){
+            if(!book.isTaken){
             const bk = await Books.findByIdAndUpdate(bookId,{isTaken:true});
             const usr = await Users.findByIdAndUpdate(userId,{ $push: {booksTaken:book}});
             let details = {
@@ -398,6 +447,9 @@ async function takeBooks(req,res){
             res.status(200).json({message:"Book Taken",user:usr,book:bk});
         }else{
             res.send("Book Already Taken");
+        }
+        }else{
+            res.send("User Not Authenticated");
         }
     }catch(err){
         console.log(err);
@@ -624,6 +676,7 @@ async function returnBooks(req,res){
 module.exports = {
     createUser,
     verifyOtp,
+    resendOtp,
     login,
     logout,
     getProfile,
