@@ -2,8 +2,8 @@ require('dotenv').config({path:"./.env"});
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-const Books =  require('./routes/Books.Routes');
-const Users = require('./routes/User.Routes');
+const Books =  require('./routes/Books.Routes.js');
+const Users = require('./routes/User.Routes.js');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
