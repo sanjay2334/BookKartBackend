@@ -18,8 +18,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 const path = 4000
-app.use('/books',require('./routes/Books.Routes'));
-app.use('/users', require('./routes/User.Routes'));
+app.use('/books',require('./routes/Books.Routes.js'));
+app.use('/users', require('./routes/User.Routes.js'));
 
 app.get('/',(req,res)=>{
     res.send("Hello world")
