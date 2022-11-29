@@ -8,7 +8,7 @@ const {
     takeBooks,
     returnBooks,
     resendOtp
-} = require('../Controller/Users.Controller');
+} = require('../Controller/Users.Controller.js');
 
 router.post('/signup',createUser);
 router.post('/verify',verifyOtp);
