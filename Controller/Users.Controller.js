@@ -1,8 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const Users = require('../Model/User.model');
-const Books = require('../Model/Book.model');
+const Users = require('../Model/User.model.js');
+const Books = require('../Model/Book.model.js');
 const otpgenerator = require('otp-generator');
 
 
