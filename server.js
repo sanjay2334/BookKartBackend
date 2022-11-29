@@ -18,8 +18,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 const path = 4000
-app.use('/books',Books);
-app.use('/users',Users);
+app.use('/books',require('./routes/Books.Routes'));
+app.use('/users', require('./routes/User.Routes'));
 
 app.listen(path,()=>{
     console.log('Listening on port http://localhost:4000/');
