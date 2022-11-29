@@ -21,6 +21,10 @@ const path = 4000
 app.use('/books',require('./routes/Books.Routes'));
 app.use('/users', require('./routes/User.Routes'));
 
+app.get('/',(req,res)=>{
+    res.send("Hello world")
+})
+
 app.listen(path,()=>{
     console.log('Listening on port http://localhost:4000/');
 })
